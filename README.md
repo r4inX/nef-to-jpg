@@ -1,6 +1,13 @@
 # nef-to-jpg
 I forked this repo to add better user-experience and maybe make the process faster. Since it took ~10min for 1.9K files.
 
+## Whats different from the original repo?
+
+- added a folder-select dialog so the directory is easier accessible
+- added a progressbar for better visualisation of the process
+- .nef Files will get renamed to .NEF so that there is only 1 loop in the code
+- bloated the shit out of this script lmao
+
 ## Original below
 
 This Python script converts an entire directory containing nef images to jpg. 
