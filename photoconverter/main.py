@@ -5,7 +5,6 @@ from random import random
 import subprocess
 import rawpy
 import imageio
-import time
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
 import pgbar
@@ -30,10 +29,7 @@ def main():
     print('Creating Export Directory (' + exportDir +')...')
     os.mkdir(exportDir)
 
-
-
     # rename .nef to .NEF 
-        # loop through all .nef/.NEF files
     nefFiles = glob.glob(f"{directory}/*.nef")
 
     for selectedFile in nefFiles:
@@ -41,7 +37,6 @@ def main():
         p.rename(p.with_suffix('.NEF'))
 
     # sometimes the file ending can be .nef or .NEF, therefore I included both possibilities to save extra work.
-    #pathnef = glob.glob(f"{directory}/*.nef")
     pathNEF = glob.glob(f"{directory}/*.NEF")
     count   = 0
 
@@ -65,21 +60,10 @@ def main():
             
             pgbar.printProgressBar(count, number_files, prefix = 'Progress:', suffix = 'Complete', length = 100)
 
-    # loop trough the .NEF files
-    """     for path in pathNEF:
-        with rawpy.imread(path) as raw:
-            rgb = raw.postprocess()
-            imageio.imwrite(exportDir + Path(path).name.replace('.NEF','.jpg'), rgb)
-            count = count + 1
-
-            pgbar.printProgressBar(count, number_files, prefix = 'Progress:', suffix = 'Complete', length = 100) """
-
-
     subprocess.run([FILEBROWSER_PATH, os.path.normpath(exportDir)])
 
     print('\n')
     print('Finished all .NEF/.nef processing\nExiting...')        
-
 
 if __name__ == '__main__':
     main()
