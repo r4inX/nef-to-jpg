@@ -18,7 +18,7 @@ def main():
     print('\n')
 
     # let the user select the directory
-    directory = askdirectory(title='Select Folder with .NEF / .nef Files to')
+    directory = askdirectory(title='Select your Folder with .NEF Files to convert them')
     exportDir = directory + '/export_' + str(random()).replace('.','') + '/'
 
     if not directory:
