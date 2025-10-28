@@ -11,7 +11,11 @@ from pathlib import Path
 
 from gooey import Gooey, GooeyParser
 
-from .converter import NEFConverter
+# Handle both direct execution and package import
+try:
+    from .converter import NEFConverter
+except ImportError:
+    from nef_converter.converter import NEFConverter
 
 logger = logging.getLogger(__name__)
 
