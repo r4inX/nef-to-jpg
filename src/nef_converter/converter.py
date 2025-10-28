@@ -67,7 +67,7 @@ class NEFConverter:
             raise ValueError(f"Directory does not exist: {directory}")
 
         # Find both .nef and .NEF files
-        nef_files = []
+        nef_files: list[Path] = []
         for pattern in ["*.nef", "*.NEF"]:
             nef_files.extend(directory.glob(pattern))
 

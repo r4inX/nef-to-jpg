@@ -8,11 +8,24 @@ import argparse
 import logging
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, cast
 
 from .converter import NEFConverter
-from .main import select_directory
 
+def select_directory() -> Optional[str]:
+    """Open a GUI dialog to select a directory."""
+    try:
+        from tkinter import Tk
+        from tkinter.filedialog import askdirectory
+
+        root = Tk()
+        root.withdraw()  # Hide the main window
+        directory: Optional[str] = cast(Optional[str], askdirectory(title="Select a directory"))
+        root.destroy()
+        return directory if directory else None
+    except ImportError:
+        print("Error: tkinter is not available.")
+        return None
 
 def create_parser() -> argparse.ArgumentParser:
     """Create and configure argument parser."""
@@ -95,7 +108,10 @@ def get_input_directory(args: argparse.Namespace) -> Optional[str]:
         print("Error: No directory specified and GUI disabled")
         return None
 
-    return select_directory()
+    directory = select_directory()
+    if directory is None:
+        return None
+    return directory
 
 
 def cli_main() -> None:
@@ -146,7 +162,3 @@ def cli_main() -> None:
         logging.error(f"Unexpected error: {e}")
         print(f"\n❌ An error occurred: {e}")
         sys.exit(1)
-
-
-if __name__ == "__main__":
-    cli_main()
