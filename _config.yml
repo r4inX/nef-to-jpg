@@ -32,13 +32,13 @@ exclude:
   - vendor/ruby/
   - .venv/
   - __pycache__/
-  - *.pyc
+  - "*.pyc"
   - .pytest_cache/
   - .coverage
   - .mypy_cache/
   - build/
   - dist/
-  - *.egg-info/
+  - "*.egg-info/"
 
 header_pages:
   - index.md
