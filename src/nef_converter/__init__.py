@@ -12,6 +12,7 @@ __email__ = "your-email@example.com"
 try:
     from .converter import NEFConverter
     from .main import main
+
     __all__ = ["NEFConverter", "main"]
 except ImportError:
     # Handle cases where dependencies aren't installed yet
