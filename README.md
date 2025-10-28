@@ -5,26 +5,42 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-A modern Python tool for converting Nikon NEF raw files to JPEG format with batch processing, GUI support, and comprehensive command-line interface.
+A modern Python tool for converting Nikon NEF raw files to JPEG format with parallel processing, EXIF preservation, GUI support, and comprehensive command-line interface.
 
 ## ✨ Features
 
 ### 🖥️ **Dual Interface Support**
-- **GUI Mode**: Easy-to-use folder selection dialog
+- **GUI Mode**: Beautiful Gooey-based desktop application (optional)
+  - Drag & drop folder selection
+  - JPEG quality slider
+  - CPU core selection
+  - EXIF preservation toggle
+  - Real-time progress tracking
 - **CLI Mode**: Powerful command-line interface with advanced options
 - **Batch Processing**: Convert entire directories of NEF files
 
-### 🚀 **Modern Architecture**
+### ⚡ **Performance Features**
+- **Parallel Processing**: Multi-core CPU utilization for 2-4x faster conversion
+- **Smart Resource Management**: Automatic optimal worker allocation
+- **Conversion Statistics**: Time per file, total time, and files/s metrics
+- **Watch Mode**: Auto-convert new files as they appear in a directory
+
+### � **EXIF Preservation**
+- **Metadata Copying**: Automatically preserves camera settings, GPS, copyright, timestamps
+- **Optional Disable**: Use `--no-exif` flag to skip metadata copying
+- **Robust Handling**: Graceful fallback for files with problematic EXIF data
+
+### �🚀 **Modern Architecture**
 - **Type-safe**: Full type hints for better code reliability
 - **Cross-platform**: Works on Windows, macOS, and Linux
 - **Progress tracking**: Real-time progress bars with `tqdm`
-- **Error handling**: Comprehensive error reporting and logging
+- **Error handling**: Comprehensive error reporting and logging with helpful tips
 
-### 📊 **Performance & Quality**
+### 📊 **Quality & Reliability**
 - **High-quality conversion**: Configurable JPEG quality (1-100)
-- **Fast processing**: Optimized for large batches
 - **Memory efficient**: Handles large files without memory issues
 - **Smart file handling**: Auto-detects .nef and .NEF extensions
+- **Fast processing**: Optimized for large batches
 
 ## 🚀 Quick Start
 
@@ -46,6 +62,9 @@ pip install -e ".[gui,dev]"
 ### Usage
 
 #### GUI Mode (requires [gui] extra)
+
+The GUI provides an easy-to-use desktop interface powered by Gooey:
+
 ```bash
 # Launch graphical interface
 nef-gui
@@ -54,11 +73,12 @@ nef-gui
 python -m nef_converter.gui
 ```
 
-#### Command Line Mode
-```bash
-# Convert files in a directory
-nef-converter -d /path/to/nef/files
-```
+Features:
+- 📁 **Drag & drop folder selection**
+- 🎚️ **Quality slider** (1-100)
+- 💻 **CPU core selection** for parallel processing
+- 📸 **EXIF toggle** to preserve metadata
+- 📊 **Real-time progress** tracking
 
 #### Command Line Mode
 ```bash
@@ -106,17 +126,20 @@ options:
 
 ## 🚀 New in v2.1.0
 
+- 🖥️ **GUI Mode**: Beautiful Gooey-based desktop application (optional dependency)
 - ⚡ **Parallel Processing**: 2-4x faster with multi-core CPU support
 - 📸 **EXIF Preservation**: Automatically copy metadata from NEF to JPEG
 - 👁️ **Watch Mode**: Auto-convert new files as they appear
-- 🎯 **Better Errors**: Helpful tips and troubleshooting links
+- 📊 **Statistics Display**: See time per file, total time, and files/s metrics
+- 🎯 **Better Errors**: Helpful tips, troubleshooting links, and suppressed harmless warnings
 - 📦 **Standalone Apps**: Windows/macOS/Linux executables (no Python needed)
 
 ## 📋 Requirements
 
 - **Python 3.9+**
-- **Dependencies**: `rawpy`, `imageio`, `numpy`, `pillow`, `tqdm`, `watchdog`
-- **Optional**: `tkinter` for GUI mode (usually included with Python)
+- **Core Dependencies**: `rawpy`, `numpy`, `pillow`, `tqdm`, `watchdog`
+- **Optional GUI**: `gooey` (install with `pip install nef-to-jpg-converter[gui]`)
+- **Optional**: `tkinter` for basic file dialogs (usually included with Python)
 
 ## 🏗️ Development
 

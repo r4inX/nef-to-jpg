@@ -46,6 +46,11 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
 # Virtual environments
 .env
 .venv
@@ -72,6 +77,7 @@ ehthumbs.db
 Thumbs.db
 
 # Project specific
+photoconverter/
 Sample-Images/
 output/
 export_*/
@@ -85,4 +91,8 @@ export_*/
 *.tmp
 *.temp
 *.log
+
+# Security/Reports
+bandit-report.json
+safety-report.json
 

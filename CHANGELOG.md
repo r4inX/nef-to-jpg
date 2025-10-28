@@ -19,6 +19,7 @@ Major performance improvements and new features for professional workflows.
   - Configurable worker count with `--workers` flag
   - Optional sequential mode with `--no-parallel` flag
 - **Smart Resource Management**: Automatic optimal worker allocation
+- **Conversion Statistics**: Display time per file, total time, and files/s after conversion
 
 #### 📸 **EXIF Preservation**
 - **Metadata Preservation**: Automatically copies EXIF data from NEF to JPEG
@@ -27,6 +28,7 @@ Major performance improvements and new features for professional workflows.
   - Copyright information
   - Timestamps
 - **Optional Disable**: Use `--no-exif` flag to skip metadata copying
+- **Robust Handling**: Graceful fallback for files with problematic EXIF data
 
 #### 👁️ **Watch Mode**
 - **Automatic Conversion**: Monitor directories for new NEF files
@@ -35,6 +37,16 @@ Major performance improvements and new features for professional workflows.
   - Tethered shooting support
 - **Usage**: `nef-converter --watch -d /path/to/watch`
 
+#### 🖥️ **Graphical User Interface** (Optional)
+- **Gooey-based GUI**: Beautiful desktop application interface
+  - Drag & drop folder selection
+  - JPEG quality slider
+  - CPU core selection
+  - EXIF preservation toggle
+  - Real-time progress tracking
+- **Installation**: `pip install nef-to-jpg-converter[gui]`
+- **Launch**: `nef-gui` or `python -m nef_converter.gui`
+
 #### 🎯 **Better Error Messages**
 - **Actionable Feedback**: Helpful tips for common errors
 - **Context-Aware**: Specific messages for different error types
@@ -42,6 +54,7 @@ Major performance improvements and new features for professional workflows.
   - Corrupted file detection
   - Memory issues
 - **Documentation Links**: Direct links to troubleshooting guides
+- **Suppressed Warnings**: Removed harmless PIL EXIF metadata warnings
 
 #### 📦 **Standalone Executables**
 - **No Python Required**: PyInstaller configurations for all platforms
@@ -54,14 +67,27 @@ Major performance improvements and new features for professional workflows.
 
 - **CLI Version**: Updated to 2.1.0
 - **GUI Version**: Updated to V2.1
-- **Dependencies**: Added `watchdog>=4.0.0` for watch mode
-- **Optional Dependencies**: Added `pyinstaller>=6.0.0` for builds
+- **Dependencies**: 
+  - Added `watchdog>=4.0.0` for watch mode
+  - Made `gooey>=1.0.0` optional (`[gui]` extra)
+  - Removed `imageio` dependency (now uses PIL exclusively)
+- **Python Support**: Requires Python 3.9+ (dropped 3.8)
+- **EXIF Handling**: Changed approach from post-save to pre-conversion for better reliability
+
+### Fixed
+
+- **EXIF Bug**: Fixed "EXIF data is too long" error for files with large metadata (e.g., blackbird.NEF)
+- **Import Order**: Fixed flake8 E402 errors
+- **Code Formatting**: Applied black formatting consistently
+- **CI/CD**: Made Gooey optional to fix Linux build failures (wxpython compilation)
+- **Type Hints**: Fixed mypy errors in main.py
 
 ### Improved
 
 - **Error Handling**: More specific exception catching and user feedback
 - **Logging**: Enhanced debug information for troubleshooting
 - **Code Quality**: Better type hints and documentation
+- **Test Coverage**: Fixed tests after removing imageio dependency
 
 ### Performance
 
