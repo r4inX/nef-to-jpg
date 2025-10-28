@@ -170,17 +170,17 @@ def create_gui() -> None:
         directory = Path(args.directory)
         if not directory.exists():
             print(f"❌ Error: Directory does not exist: {args.directory}")
-            print(f"💡 Please select a valid directory with NEF files.")
+            print("💡 Please select a valid directory with NEF files.")
             sys.exit(1)
 
         if not directory.is_dir():
             print(f"❌ Error: Path is not a directory: {args.directory}")
-            print(f"💡 Please select a folder, not a file.")
+            print("💡 Please select a folder, not a file.")
             sys.exit(1)
 
         # Validate quality
         if args.quality < 1 or args.quality > 100:
-            print(f"❌ Error: Quality must be between 1 and 100")
+            print("❌ Error: Quality must be between 1 and 100")
             print(f"💡 You entered: {args.quality}")
             sys.exit(1)
 
@@ -250,7 +250,7 @@ def create_gui() -> None:
         print("   • Try reducing the quality setting if running out of memory")
         print("   • Enable verbose mode (-v) for more details")
         print()
-        print(f"📖 Documentation: https://github.com/r4inX/nef-to-jpg#readme")
+        print("📖 Documentation: https://github.com/r4inX/nef-to-jpg#readme")
         sys.exit(1)
 
 

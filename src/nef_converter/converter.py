@@ -16,11 +16,10 @@ from typing import Dict, List, Optional, Tuple
 
 import rawpy
 from PIL import Image
+from tqdm import tqdm
 
 # Suppress PIL warnings about EXIF metadata
 warnings.filterwarnings("ignore", category=UserWarning, module="PIL.TiffImagePlugin")
-
-from tqdm import tqdm
 
 # Configure logging
 logger = logging.getLogger(__name__)
