@@ -5,7 +5,7 @@ Core conversion functionality for NEF files.
 """
 
 import logging
-import subprocess
+import subprocess  # nosec: B404
 import sys
 import uuid
 from pathlib import Path

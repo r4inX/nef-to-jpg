@@ -1,0 +1,7 @@
+exclude_dirs:
+  - tests
+  - build
+  - dist
+skips:
+  - B404
+  - B603

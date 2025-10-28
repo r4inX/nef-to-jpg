@@ -32,11 +32,12 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    "imageio>=2.37.0",
-    "rawpy>=0.25.0",
-    "numpy>=2.0.0",
-    "pillow>=12.0.0",
-    "tqdm>=4.66.0",
+    "imageio>=2.31.0",
+    "rawpy>=0.20.0",
+    "numpy>=1.24.0; python_version>='3.9'",
+    "numpy>=1.21.0; python_version=='3.8'",
+    "pillow>=10.0.0",
+    "tqdm>=4.64.0",
 ]
 
 [project.optional-dependencies]
@@ -45,6 +46,7 @@ dev = [
     "pytest-cov>=4.0.0",
     "black>=24.0.0",
     "flake8>=7.0.0",
+    "flake8-pyproject>=1.2.0",
     "isort>=5.13.0",
     "mypy>=1.8.0",
     "pre-commit>=3.6.0",
@@ -180,3 +182,8 @@ exclude = [
 per-file-ignores = [
     "__init__.py:F401",
 ]
+
+# Bandit security scanner configuration
+[tool.bandit]
+exclude_dirs = ["tests", "build", "dist"]
+skips = ["B404", "B603"]
