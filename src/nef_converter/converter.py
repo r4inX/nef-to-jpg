@@ -9,12 +9,17 @@ import subprocess  # nosec: B404
 import sys
 import time
 import uuid
+import warnings
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import rawpy
 from PIL import Image
+
+# Suppress PIL warnings about EXIF metadata
+warnings.filterwarnings('ignore', category=UserWarning, module='PIL.TiffImagePlugin')
+
 from tqdm import tqdm
 
 # Configure logging
