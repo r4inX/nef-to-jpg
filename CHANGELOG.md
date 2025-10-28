@@ -58,7 +58,7 @@ This release represents a complete rewrite and modernization of the NEF to JPG c
 
 #### 🔧 **Technical Improvements**
 - **Dependencies**: Updated to latest stable versions
-- **Python Support**: Python 3.8+ requirement with modern features
+- **Python Support**: Python 3.9+ requirement with modern features
 - **Code Quality**: Comprehensive refactoring with best practices
 - **Project Structure**: Professional package layout and organization
 

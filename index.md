@@ -100,7 +100,7 @@ nef-converter -d ./photos -v
 ## 🏆 Quality Assurance
 
 <div style="text-align: center; margin: 2rem 0;">
-  <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python 3.8+">
+  <img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="Python 3.9+">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
   <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black">
 </div>
