@@ -12,6 +12,7 @@ from typing import Optional, cast
 
 from .converter import NEFConverter
 
+
 def select_directory() -> Optional[str]:
     """Open a GUI dialog to select a directory."""
     try:
@@ -20,12 +21,15 @@ def select_directory() -> Optional[str]:
 
         root = Tk()
         root.withdraw()  # Hide the main window
-        directory: Optional[str] = cast(Optional[str], askdirectory(title="Select a directory"))
+        directory: Optional[str] = cast(
+            Optional[str], askdirectory(title="Select a directory")
+        )
         root.destroy()
         return directory if directory else None
     except ImportError:
         print("Error: tkinter is not available.")
         return None
+
 
 def create_parser() -> argparse.ArgumentParser:
     """Create and configure argument parser."""
