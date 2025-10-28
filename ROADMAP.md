@@ -84,7 +84,7 @@ This document outlines planned features, improvements, and ideas for future vers
 
 ---
 
-## 🐳 v2.5.0 - DevOps & Deployment (Q4 2026)
+## 🐳 v2.5.0 - DevOps & Deployment (Q3 2026)
 
 ### 🐳 Containerization
 - [ ] **Docker Image**: Official Docker image for easy deployment
@@ -103,6 +103,38 @@ This document outlines planned features, improvements, and ideas for future vers
 - [ ] **Grafana Dashboards**: Pre-built monitoring dashboards
 - [ ] **Structured Logging**: JSON structured logs
 - [ ] **OpenTelemetry**: Distributed tracing support
+
+---
+
+## 💼 v2.6.0 - Licensing & Monetization (Q4 2026)
+
+### 📜 Dual License Model
+
+This version introduces a **dual license model** to support sustainable development:
+
+- [ ] **AGPLv3 License**: Free for open source and personal use
+- [ ] **Commercial License**: For proprietary/commercial use without copyleft obligations
+- [ ] **License Documentation**: Clear guidelines on which license to use
+- [ ] **Commercial Pricing**: Tiered pricing (Small Business, Enterprise, OEM)
+- [ ] **License Management**: System for commercial license verification
+- [ ] **Purchase Portal**: Website for buying commercial licenses
+
+### 🛡️ Legal & Compliance
+- [ ] **Contributor License Agreement (CLA)**: For future contributors
+- [ ] **License Headers**: Add license headers to all source files
+- [ ] **Grandfathering**: All v2.5.x and earlier remain MIT licensed
+- [ ] **Migration Guide**: Help users understand license change
+- [ ] **Legal Documentation**: Terms of service, privacy policy
+
+### 💰 Commercial Features
+- [ ] **Priority Support**: Commercial customers get 24h response time
+- [ ] **Custom Branding**: White-label options for OEM customers
+- [ ] **Service Level Agreements (SLA)**: Guaranteed uptime for enterprise
+- [ ] **Dedicated Support Channel**: Private support portal for commercial users
+
+**Note**: All versions before v2.6.0 remain MIT licensed forever!
+
+See `.github/DUAL-LICENSE-PLAN.md` for detailed migration information.
 
 ---
 

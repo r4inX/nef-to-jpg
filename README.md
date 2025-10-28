@@ -292,9 +292,17 @@ See our detailed [ROADMAP.md](ROADMAP.md) for planned features and improvements!
 - 🔌 **Cloud Integration**: Dropbox, Google Drive, OneDrive support
 - 📦 **Automation**: Hot folders, scheduling, webhook notifications
 
-#### v2.5.0 - DevOps & Deployment (Q4 2026)
-- � **Containerization**: Docker, Kubernetes, serverless functions
+#### v2.5.0 - DevOps & Deployment (Q3 2026)
+- 🐳 **Containerization**: Docker, Kubernetes, serverless functions
 - 📊 **Monitoring**: Prometheus metrics, Grafana dashboards
+
+#### v2.6.0 - Licensing & Monetization (Q4 2026)
+- 💼 **Dual License**: Transition to AGPLv3 + Commercial License model
+- 📜 **Commercial Options**: Small Business, Enterprise, OEM licenses
+- 🛡️ **Legal**: CLA, license management, migration guide
+- 💰 **Premium Support**: Priority support for commercial customers
+
+**Note**: All versions v2.5.x and earlier remain MIT licensed forever!
 
 #### v3.0.0 - Enterprise & Advanced (2027)
 - 🏢 **Enterprise**: Multi-user, licensing, audit logging, distributed processing
