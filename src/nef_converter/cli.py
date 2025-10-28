@@ -194,7 +194,7 @@ def cli_main() -> None:
             return
 
         # Convert files
-        successful, total = converter.convert_batch(
+        successful, total, stats = converter.convert_batch(
             input_directory, parallel=not args.no_parallel
         )
 
@@ -202,6 +202,14 @@ def cli_main() -> None:
         print()
         print("✅ Conversion completed!")
         print(f"📊 Successfully converted: {successful}/{total} files")
+        
+        # Display statistics
+        if stats:
+            print()
+            print("📈 Statistics:")
+            print(f"   ⏱️  Total time: {stats['total_time']:.2f}s")
+            print(f"   📸 Time per file: {stats['time_per_file']:.2f}s")
+            print(f"   ⚡ Speed: {stats['files_per_second']:.2f} files/s")
 
         if successful == 0:
             print("❌ No files were converted. Please check the logs.")

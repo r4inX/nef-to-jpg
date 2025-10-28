@@ -7,10 +7,11 @@ Core conversion functionality for NEF files.
 import logging
 import subprocess  # nosec: B404
 import sys
+import time
 import uuid
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import rawpy
 from PIL import Image
@@ -272,7 +273,7 @@ class NEFConverter:
 
     def convert_batch(
         self, input_directory: str, parallel: bool = True
-    ) -> Tuple[int, int]:
+    ) -> Tuple[int, int, Dict[str, float]]:
         """
         Convert all NEF files in a directory to JPG.
 
@@ -281,8 +282,10 @@ class NEFConverter:
             parallel: Use parallel processing (default: True)
 
         Returns:
-            Tuple of (successful_conversions, total_files)
+            Tuple of (successful_conversions, total_files, statistics)
         """
+        start_time = time.time()
+
         try:
             directory = Path(input_directory)
             nef_files = self.get_nef_files(directory)
@@ -326,20 +329,30 @@ class NEFConverter:
                     if self.convert_nef_to_jpg(nef_file, output_file):
                         successful += 1
 
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+
+            # Calculate statistics
+            stats = {
+                "total_time": elapsed_time,
+                "time_per_file": elapsed_time / len(nef_files) if nef_files else 0,
+                "files_per_second": len(nef_files) / elapsed_time if elapsed_time > 0 else 0,
+            }
+
             logger.info(
                 f"Conversion complete: {successful}/{len(nef_files)} "
-                f"files converted"
+                f"files converted in {elapsed_time:.2f}s"
             )
 
             # Open output directory
             if successful > 0:
                 self._open_directory(output_dir)
 
-            return successful, len(nef_files)
+            return successful, len(nef_files), stats
 
         except Exception as e:
             logger.error(f"Batch conversion failed: {e}")
-            return 0, 0
+            return 0, 0, {}
 
     def _open_directory(self, directory: Path) -> None:
         """Open directory in system file manager."""
