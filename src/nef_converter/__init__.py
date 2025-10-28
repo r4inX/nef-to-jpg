@@ -10,8 +10,8 @@ __email__ = "your-email@example.com"
 
 # Import main components
 try:
-    from .converter import NEFConverter
-    from .main import main
+    from .converter import NEFConverter  # noqa: F401
+    from .main import main  # noqa: F401
 
     __all__ = ["NEFConverter", "main"]
 except ImportError:

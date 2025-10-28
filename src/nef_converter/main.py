@@ -6,7 +6,6 @@ This module provides the command-line interface and GUI functionality.
 
 import logging
 import sys
-from pathlib import Path
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
 from typing import Optional
@@ -30,7 +29,9 @@ def select_directory() -> Optional[str]:
     root = Tk()
     root.withdraw()  # Hide the main window
 
-    directory = askdirectory(title="Select your Folder with .NEF Files to convert them")
+    directory = askdirectory(
+        title="Select your Folder with .NEF Files to convert them"
+    )
 
     root.destroy()
     return directory if directory else None
@@ -59,13 +60,15 @@ def main() -> None:
 
         # Show results
         print()
-        print(f"✅ Conversion completed!")
+        print("✅ Conversion completed!")
         print(f"📊 Successfully converted: {successful}/{total} files")
 
         if successful == 0:
             print("❌ No files were converted. Please check the logs.")
         elif successful < total:
-            print("⚠️ Some files failed to convert. Check the logs for details.")
+            print(
+                "⚠️ Some files failed to convert. Check the logs for details."
+            )
         else:
             print("🎉 All files converted successfully!")
 

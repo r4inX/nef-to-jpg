@@ -22,13 +22,16 @@ def create_parser() -> argparse.ArgumentParser:
         epilog="""
 Examples:
   %(prog)s                          # Open directory selector GUI
-  %(prog)s -d /path/to/nef/files    # Convert files in specified directory
-  %(prog)s -d . -q 90 -o output/    # Custom quality and output directory
+  %(prog)s -d /path/to/nef/files    # Convert files in directory
+  %(prog)s -d . -q 90 -o output/    # Custom quality and output
         """,
     )
 
     parser.add_argument(
-        "-d", "--directory", type=str, help="Directory containing NEF files to convert"
+        "-d",
+        "--directory",
+        type=str,
+        help="Directory containing NEF files to convert",
     )
 
     parser.add_argument(
@@ -48,14 +51,21 @@ Examples:
     )
 
     parser.add_argument(
-        "--no-gui", action="store_true", help="Disable GUI directory selector"
+        "--no-gui",
+        action="store_true",
+        help="Disable GUI directory selector",
     )
 
     parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Enable verbose logging"
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable verbose logging",
     )
 
-    parser.add_argument("--version", action="version", version="%(prog)s 2.0.0")
+    parser.add_argument(
+        "--version", action="version", version="%(prog)s 2.0.0"
+    )
 
     return parser
 
@@ -119,14 +129,16 @@ def cli_main() -> None:
 
         # Show results
         print()
-        print(f"✅ Conversion completed!")
+        print("✅ Conversion completed!")
         print(f"📊 Successfully converted: {successful}/{total} files")
 
         if successful == 0:
             print("❌ No files were converted. Please check the logs.")
             sys.exit(1)
         elif successful < total:
-            print("⚠️ Some files failed to convert. Check the logs for details.")
+            print(
+                "⚠️ Some files failed to convert. Check the logs for details."
+            )
             sys.exit(1)
         else:
             print("🎉 All files converted successfully!")

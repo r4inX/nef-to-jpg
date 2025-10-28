@@ -45,7 +45,9 @@ class TestNEFConverter:
         mock_rawpy.imread.return_value.__enter__.return_value = mock_raw
 
         converter = NEFConverter(quality=95)
-        result = converter.convert_nef_to_jpg(Path("test.nef"), Path("test.jpg"))
+        result = converter.convert_nef_to_jpg(
+            Path("test.nef"), Path("test.jpg")
+        )
 
         assert result is True
         mock_rawpy.imread.assert_called_once_with("test.nef")
@@ -58,7 +60,9 @@ class TestNEFConverter:
         mock_rawpy.imread.side_effect = Exception("Mock error")
 
         converter = NEFConverter()
-        result = converter.convert_nef_to_jpg(Path("test.nef"), Path("test.jpg"))
+        result = converter.convert_nef_to_jpg(
+            Path("test.nef"), Path("test.jpg")
+        )
 
         assert result is False
 

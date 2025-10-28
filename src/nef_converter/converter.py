@@ -22,7 +22,9 @@ logger = logging.getLogger(__name__)
 if sys.platform == "win32":
     import os
 
-    FILEBROWSER_PATH = os.path.join(os.getenv("WINDIR", "C:\\Windows"), "explorer.exe")
+    FILEBROWSER_PATH = os.path.join(
+        os.getenv("WINDIR", "C:\\Windows"), "explorer.exe"
+    )
 elif sys.platform == "darwin":
     FILEBROWSER_PATH = "open"
 else:
@@ -30,7 +32,10 @@ else:
 
 
 class NEFConverter:
-    """Modern NEF to JPG converter with improved error handling and progress tracking."""
+    """
+    Modern NEF to JPG converter with improved error handling and progress
+    tracking.
+    """
 
     def __init__(self, quality: int = 95, output_format: str = "JPEG") -> None:
         """
@@ -43,7 +48,8 @@ class NEFConverter:
         self.quality = quality
         self.output_format = output_format
         logger.info(
-            f"Initialized NEF Converter with quality={quality}, format={output_format}"
+            f"Initialized NEF Converter with "
+            f"quality={quality}, format={output_format}"
         )
 
     def get_nef_files(self, directory: Path) -> List[Path]:
@@ -126,14 +132,17 @@ class NEFConverter:
             successful = 0
 
             # Convert files with progress bar
-            for nef_file in tqdm(nef_files, desc="Converting NEF files", unit="file"):
+            for nef_file in tqdm(
+                nef_files, desc="Converting NEF files", unit="file"
+            ):
                 output_file = output_dir / f"{nef_file.stem}.jpg"
 
                 if self.convert_nef_to_jpg(nef_file, output_file):
                     successful += 1
 
             logger.info(
-                f"Conversion complete: {successful}/{len(nef_files)} files converted"
+                f"Conversion complete: {successful}/{len(nef_files)} "
+                f"files converted"
             )
 
             # Open output directory
@@ -150,8 +159,14 @@ class NEFConverter:
         """Open directory in system file manager."""
         try:
             if sys.platform == "win32":
-                subprocess.run([FILEBROWSER_PATH, str(directory)], check=False)
+                # nosec: B603 - subprocess is safe here with hardcoded paths
+                subprocess.run(
+                    [FILEBROWSER_PATH, str(directory)], check=False
+                )
             else:
-                subprocess.run([FILEBROWSER_PATH, str(directory)], check=False)
+                # nosec: B603 - subprocess is safe here with hardcoded paths
+                subprocess.run(
+                    [FILEBROWSER_PATH, str(directory)], check=False
+                )
         except Exception as e:
             logger.warning(f"Could not open directory {directory}: {e}")
