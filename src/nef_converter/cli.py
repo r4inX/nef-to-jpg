@@ -12,6 +12,8 @@ from typing import Optional, cast
 
 from .converter import NEFConverter
 
+logger = logging.getLogger(__name__)
+
 
 def select_directory() -> Optional[str]:
     """Open a GUI dialog to select a directory."""
@@ -68,6 +70,31 @@ Examples:
     )
 
     parser.add_argument(
+        "--no-parallel",
+        action="store_true",
+        help="Disable parallel processing",
+    )
+
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help="Number of parallel workers (default: auto)",
+    )
+
+    parser.add_argument(
+        "--no-exif",
+        action="store_true",
+        help="Do not preserve EXIF metadata",
+    )
+
+    parser.add_argument(
+        "--watch",
+        action="store_true",
+        help="Watch directory for new NEF files and convert automatically",
+    )
+
+    parser.add_argument(
         "--no-gui",
         action="store_true",
         help="Disable GUI directory selector",
@@ -80,7 +107,7 @@ Examples:
         help="Enable verbose logging",
     )
 
-    parser.add_argument("--version", action="version", version="%(prog)s 2.0.0")
+    parser.add_argument("--version", action="version", version="%(prog)s 2.1.0")
 
     return parser
 
@@ -140,10 +167,36 @@ def cli_main() -> None:
 
     try:
         # Initialize converter
-        converter = NEFConverter(quality=args.quality)
+        converter = NEFConverter(
+            quality=args.quality,
+            max_workers=args.workers,
+            preserve_exif=not args.no_exif,
+        )
+
+        # Watch mode
+        if args.watch:
+            from .watch import watch_directory
+
+            output_dir = (
+                Path(args.output)
+                if args.output
+                else Path(input_directory) / "watch_output"
+            )
+            output_dir.mkdir(exist_ok=True)
+
+            try:
+                watch_directory(input_directory, converter, output_dir)
+            except Exception as e:
+                logger.error(f"Watch mode failed: {e}")
+                print(f"❌ Watch mode error: {e}")
+                print("💡 Tip: Ensure watchdog is installed: pip install watchdog")
+                sys.exit(1)
+            return
 
         # Convert files
-        successful, total = converter.convert_batch(input_directory)
+        successful, total = converter.convert_batch(
+            input_directory, parallel=not args.no_parallel
+        )
 
         # Show results
         print()
@@ -152,9 +205,11 @@ def cli_main() -> None:
 
         if successful == 0:
             print("❌ No files were converted. Please check the logs.")
+            print("💡 Tip: Use -v flag for detailed error messages")
             sys.exit(1)
         elif successful < total:
             print("⚠️ Some files failed to convert. Check the logs for details.")
+            print(f"💡 Tip: {total - successful} files had errors")
             sys.exit(1)
         else:
             print("🎉 All files converted successfully!")
@@ -165,4 +220,6 @@ def cli_main() -> None:
     except Exception as e:
         logging.error(f"Unexpected error: {e}")
         print(f"\n❌ An error occurred: {e}")
+        print("💡 Tip: Use -v flag for detailed error information")
+        print("📖 See: https://github.com/r4inX/nef-to-jpg#troubleshooting")
         sys.exit(1)

@@ -38,7 +38,7 @@ def select_directory() -> Optional[str]:
 def main() -> None:
     """Main entry point for the NEF to JPG converter."""
     print("=" * 50)
-    print("🔄 NEF-to-JPG Converter V2.0")
+    print("🔄 NEF-to-JPG Converter V2.1")
     print("=" * 50)
     print()
 

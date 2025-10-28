@@ -54,12 +54,22 @@ nef-converter -d /path/to/nef/files -q 90 -o /path/to/output
 
 # Disable GUI for server environments
 nef-converter -d /path/to/nef/files --no-gui
+
+# Watch mode - auto-convert new files
+nef-converter --watch -d /path/to/watch
+
+# Parallel processing (2-4x faster)
+nef-converter -d . --workers 8
+
+# Disable EXIF preservation
+nef-converter -d . --no-exif
 ```
 
 ### Advanced Options
 
 ```bash
-usage: nef-converter [-h] [-d DIRECTORY] [-o OUTPUT] [-q 1-100] [--no-gui] [-v] [--version]
+usage: nef-converter [-h] [-d DIRECTORY] [-o OUTPUT] [-q 1-100] [--no-parallel] 
+                     [--workers WORKERS] [--no-exif] [--watch] [--no-gui] [-v] [--version]
 
 Convert Nikon NEF raw files to JPEG format
 
@@ -69,15 +79,27 @@ options:
                         Directory containing NEF files to convert
   -o, --output OUTPUT   Output directory (default: creates export_* in input directory)
   -q, --quality 1-100   JPEG quality (1-100, default: 95)
+  --no-parallel         Disable parallel processing
+  --workers WORKERS     Number of parallel workers (default: auto)
+  --no-exif             Do not preserve EXIF metadata
+  --watch               Watch directory for new NEF files and convert automatically
   --no-gui              Disable GUI directory selector
   -v, --verbose         Enable verbose logging
   --version             show program's version number and exit
 ```
 
+## 🚀 New in v2.1.0
+
+- ⚡ **Parallel Processing**: 2-4x faster with multi-core CPU support
+- 📸 **EXIF Preservation**: Automatically copy metadata from NEF to JPEG
+- 👁️ **Watch Mode**: Auto-convert new files as they appear
+- 🎯 **Better Errors**: Helpful tips and troubleshooting links
+- 📦 **Standalone Apps**: Windows/macOS/Linux executables (no Python needed)
+
 ## 📋 Requirements
 
 - **Python 3.9+**
-- **Dependencies**: `rawpy`, `imageio`, `numpy`, `pillow`, `tqdm`
+- **Dependencies**: `rawpy`, `imageio`, `numpy`, `pillow`, `tqdm`, `watchdog`
 - **Optional**: `tkinter` for GUI mode (usually included with Python)
 
 ## 🏗️ Development

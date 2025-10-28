@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nef-to-jpg-converter"
-version = "2.0.0"
+version = "2.1.0"
 description = "A modern Python tool for converting Nikon NEF raw files to JPEG format"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {text = "MIT"}
@@ -36,9 +36,13 @@ dependencies = [
     "numpy>=1.24.0",
     "pillow>=10.0.0",
     "tqdm>=4.64.0",
+    "watchdog>=4.0.0",
 ]
 
 [project.optional-dependencies]
+build = [
+    "pyinstaller>=6.0.0",
+]
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=4.0.0",

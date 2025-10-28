@@ -8,11 +8,13 @@ import logging
 import subprocess  # nosec: B404
 import sys
 import uuid
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import imageio
 import rawpy
+from PIL import Image
 from tqdm import tqdm
 
 # Configure logging
@@ -35,19 +37,30 @@ class NEFConverter:
     tracking.
     """
 
-    def __init__(self, quality: int = 95, output_format: str = "JPEG") -> None:
+    def __init__(
+        self,
+        quality: int = 95,
+        output_format: str = "JPEG",
+        max_workers: Optional[int] = None,
+        preserve_exif: bool = True,
+    ) -> None:
         """
         Initialize the NEF converter.
 
         Args:
             quality: JPEG quality (1-100)
             output_format: Output format (default: JPEG)
+            max_workers: Maximum number of parallel workers (None = auto)
+            preserve_exif: Preserve EXIF metadata from NEF files
         """
         self.quality = quality
         self.output_format = output_format
+        self.max_workers = max_workers
+        self.preserve_exif = preserve_exif
         logger.info(
             f"Initialized NEF Converter with "
-            f"quality={quality}, format={output_format}"
+            f"quality={quality}, format={output_format}, "
+            f"workers={max_workers or 'auto'}, preserve_exif={preserve_exif}"
         )
 
     def get_nef_files(self, directory: Path) -> List[Path]:
@@ -63,8 +76,18 @@ class NEFConverter:
         Raises:
             ValueError: If directory doesn't exist or no NEF files found
         """
-        if not directory.exists() or not directory.is_dir():
-            raise ValueError(f"Directory does not exist: {directory}")
+        if not directory.exists():
+            raise ValueError(
+                f"❌ Directory does not exist: {directory}\n"
+                f"💡 Tip: Check the path and try again\n"
+                f"📖 See: https://github.com/r4inX/nef-to-jpg#usage"
+            )
+
+        if not directory.is_dir():
+            raise ValueError(
+                f"❌ Path is not a directory: {directory}\n"
+                f"💡 Tip: Provide a folder path, not a file path"
+            )
 
         # Find both .nef and .NEF files
         nef_files: list[Path] = []
@@ -72,7 +95,11 @@ class NEFConverter:
             nef_files.extend(directory.glob(pattern))
 
         if not nef_files:
-            raise ValueError(f"No NEF files found in: {directory}")
+            raise ValueError(
+                f"❌ No NEF files found in: {directory}\n"
+                f"💡 Tip: Ensure the directory contains .nef or .NEF files\n"
+                f"📂 Supported: .nef, .NEF extensions"
+            )
 
         logger.info(f"Found {len(nef_files)} NEF files in {directory}")
         return nef_files
@@ -107,17 +134,123 @@ class NEFConverter:
             with rawpy.imread(str(nef_path)) as raw:
                 rgb = raw.postprocess()
                 imageio.imwrite(str(output_path), rgb, quality=self.quality)
+
+            # Preserve EXIF data if requested
+            if self.preserve_exif:
+                self._copy_exif_data(nef_path, output_path)
+
             return True
+        except FileNotFoundError:
+            logger.error(f"File not found: {nef_path}")
+            print(f"❌ File not found: {nef_path.name}")
+            return False
+        except PermissionError:
+            logger.error(f"Permission denied: {nef_path}")
+            print(
+                f"❌ Permission denied: {nef_path.name}\n"
+                f"💡 Tip: Check file permissions or close any program using the file"
+            )
+            return False
         except Exception as e:
+            error_msg = str(e).lower()
             logger.error(f"Failed to convert {nef_path}: {e}")
+
+            # Provide helpful error messages based on error type
+            if "corrupted" in error_msg or "invalid" in error_msg:
+                print(
+                    f"❌ File may be corrupted: {nef_path.name}\n"
+                    f"💡 Tip: Try opening in Nikon software to verify\n"
+                    f"📖 See: https://github.com/r4inX/nef-to-jpg#troubleshooting"
+                )
+            elif "memory" in error_msg:
+                print(
+                    f"❌ Out of memory processing: {nef_path.name}\n"
+                    f"💡 Tip: Close other applications or use --no-parallel flag"
+                )
+            else:
+                print(
+                    f"❌ Failed to convert: {nef_path.name}\n"
+                    f"💡 Error: {e}\n"
+                    f"📖 See: https://github.com/r4inX/nef-to-jpg#troubleshooting"
+                )
             return False
 
-    def convert_batch(self, input_directory: str) -> Tuple[int, int]:
+    def _copy_exif_data(self, source_path: Path, dest_path: Path) -> None:
+        """
+        Copy EXIF metadata from source to destination.
+
+        Args:
+            source_path: Source NEF file
+            dest_path: Destination JPEG file
+        """
+        try:
+            # Open both images
+            with Image.open(str(source_path)) as source_img:
+                with Image.open(str(dest_path)) as dest_img:
+                    # Get EXIF data from source
+                    exif = source_img.getexif()
+
+                    if exif:
+                        # Save destination with EXIF data
+                        dest_img.save(
+                            str(dest_path),
+                            "JPEG",
+                            quality=self.quality,
+                            exif=exif,
+                        )
+                        logger.debug(f"Copied EXIF data to {dest_path.name}")
+        except Exception as e:
+            logger.warning(f"Could not copy EXIF data from {source_path.name}: {e}")
+
+    @staticmethod
+    def _convert_single_file(args: Tuple[Path, Path, int, bool]) -> Tuple[bool, Path]:
+        """
+        Static method for parallel processing of single file.
+
+        Args:
+            args: Tuple of (nef_path, output_path, quality, preserve_exif)
+
+        Returns:
+            Tuple of (success, nef_path)
+        """
+        nef_path, output_path, quality, preserve_exif = args
+        try:
+            with rawpy.imread(str(nef_path)) as raw:
+                rgb = raw.postprocess()
+                imageio.imwrite(str(output_path), rgb, quality=quality)
+
+            # Preserve EXIF data if requested
+            if preserve_exif:
+                try:
+                    with Image.open(str(nef_path)) as source_img:
+                        with Image.open(str(output_path)) as dest_img:
+                            exif = source_img.getexif()
+                            if exif:
+                                dest_img.save(
+                                    str(output_path),
+                                    "JPEG",
+                                    quality=quality,
+                                    exif=exif,
+                                )
+                except Exception as e:
+                    logger.warning(
+                        f"Could not copy EXIF data from {nef_path.name}: {e}"
+                    )
+
+            return True, nef_path
+        except Exception as e:
+            logger.error(f"Failed to convert {nef_path}: {e}")
+            return False, nef_path
+
+    def convert_batch(
+        self, input_directory: str, parallel: bool = True
+    ) -> Tuple[int, int]:
         """
         Convert all NEF files in a directory to JPG.
 
         Args:
             input_directory: Directory containing NEF files
+            parallel: Use parallel processing (default: True)
 
         Returns:
             Tuple of (successful_conversions, total_files)
@@ -129,12 +262,41 @@ class NEFConverter:
 
             successful = 0
 
-            # Convert files with progress bar
-            for nef_file in tqdm(nef_files, desc="Converting NEF files", unit="file"):
-                output_file = output_dir / f"{nef_file.stem}.jpg"
+            if parallel and len(nef_files) > 1:
+                # Parallel processing for better performance
+                tasks = [
+                    (
+                        nef_file,
+                        output_dir / f"{nef_file.stem}.jpg",
+                        self.quality,
+                        self.preserve_exif,
+                    )
+                    for nef_file in nef_files
+                ]
 
-                if self.convert_nef_to_jpg(nef_file, output_file):
-                    successful += 1
+                with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
+                    futures = {
+                        executor.submit(self._convert_single_file, task): task[0]
+                        for task in tasks
+                    }
+
+                    with tqdm(
+                        total=len(nef_files), desc="Converting NEF files", unit="file"
+                    ) as pbar:
+                        for future in as_completed(futures):
+                            success, _ = future.result()
+                            if success:
+                                successful += 1
+                            pbar.update(1)
+            else:
+                # Sequential processing
+                for nef_file in tqdm(
+                    nef_files, desc="Converting NEF files", unit="file"
+                ):
+                    output_file = output_dir / f"{nef_file.stem}.jpg"
+
+                    if self.convert_nef_to_jpg(nef_file, output_file):
+                        successful += 1
 
             logger.info(
                 f"Conversion complete: {successful}/{len(nef_files)} "

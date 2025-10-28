@@ -5,6 +5,70 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-10-28
+
+### 🎉 Performance & Feature Release
+
+Major performance improvements and new features for professional workflows.
+
+### Added
+
+#### ⚡ **Performance**
+- **Parallel Processing**: Multi-core CPU utilization with ProcessPoolExecutor
+  - 2-4x faster conversion for large batches
+  - Configurable worker count with `--workers` flag
+  - Optional sequential mode with `--no-parallel` flag
+- **Smart Resource Management**: Automatic optimal worker allocation
+
+#### 📸 **EXIF Preservation**
+- **Metadata Preservation**: Automatically copies EXIF data from NEF to JPEG
+  - Camera settings (ISO, aperture, shutter speed)
+  - GPS coordinates
+  - Copyright information
+  - Timestamps
+- **Optional Disable**: Use `--no-exif` flag to skip metadata copying
+
+#### 👁️ **Watch Mode**
+- **Automatic Conversion**: Monitor directories for new NEF files
+  - Real-time conversion as files are added
+  - Perfect for workflow automation
+  - Tethered shooting support
+- **Usage**: `nef-converter --watch -d /path/to/watch`
+
+#### 🎯 **Better Error Messages**
+- **Actionable Feedback**: Helpful tips for common errors
+- **Context-Aware**: Specific messages for different error types
+  - File permission errors
+  - Corrupted file detection
+  - Memory issues
+- **Documentation Links**: Direct links to troubleshooting guides
+
+#### 📦 **Standalone Executables**
+- **No Python Required**: PyInstaller configurations for all platforms
+  - Windows: `nef-converter.exe`
+  - macOS: `nef-converter.app`
+  - Linux: `nef-converter`
+- **Build Scripts**: Ready-to-use spec files in `build-scripts/`
+
+### Changed
+
+- **CLI Version**: Updated to 2.1.0
+- **GUI Version**: Updated to V2.1
+- **Dependencies**: Added `watchdog>=4.0.0` for watch mode
+- **Optional Dependencies**: Added `pyinstaller>=6.0.0` for builds
+
+### Improved
+
+- **Error Handling**: More specific exception catching and user feedback
+- **Logging**: Enhanced debug information for troubleshooting
+- **Code Quality**: Better type hints and documentation
+
+### Performance
+
+- **Batch Processing**: Up to 4x faster on multi-core systems
+- **Memory Efficiency**: Optimized resource usage for large NEF files
+- **Scalability**: Better handling of 1000+ file batches
+
 ## [2.0.0] - 2025-10-28
 
 ### 🚀 Major Release - Complete Modernization
