@@ -13,14 +13,18 @@ from pathlib import Path
 # Check if Gooey is available
 try:
     from gooey import Gooey, GooeyParser
+
     GOOEY_AVAILABLE = True
 except ImportError:
     GOOEY_AVAILABLE = False
+
     # Create dummy decorators for when Gooey is not installed
     def Gooey(*args, **kwargs):
         def decorator(func):
             return func
+
         return decorator
+
     GooeyParser = argparse.ArgumentParser
 
 # Handle both direct execution and package import
@@ -264,7 +268,7 @@ def gui_main() -> None:
         print("  pip install gooey")
         print()
         sys.exit(1)
-    
+
     create_gui()
 
 

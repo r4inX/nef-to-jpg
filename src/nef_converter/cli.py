@@ -202,7 +202,7 @@ def cli_main() -> None:
         print()
         print("✅ Conversion completed!")
         print(f"📊 Successfully converted: {successful}/{total} files")
-        
+
         # Display statistics
         if stats:
             print()

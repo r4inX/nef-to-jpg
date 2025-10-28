@@ -18,7 +18,7 @@ import rawpy
 from PIL import Image
 
 # Suppress PIL warnings about EXIF metadata
-warnings.filterwarnings('ignore', category=UserWarning, module='PIL.TiffImagePlugin')
+warnings.filterwarnings("ignore", category=UserWarning, module="PIL.TiffImagePlugin")
 
 from tqdm import tqdm
 
@@ -151,11 +151,15 @@ class NEFConverter:
             # Save with EXIF data if available
             if exif_data:
                 try:
-                    img.save(str(output_path), "JPEG", quality=self.quality, exif=exif_data)
+                    img.save(
+                        str(output_path), "JPEG", quality=self.quality, exif=exif_data
+                    )
                     logger.debug(f"Saved {output_path.name} with EXIF data")
                 except Exception as exif_err:
                     # If EXIF save fails, save without EXIF
-                    logger.warning(f"Could not save with EXIF for {nef_path.name}: {exif_err}, saving without EXIF")
+                    logger.warning(
+                        f"Could not save with EXIF for {nef_path.name}: {exif_err}, saving without EXIF"
+                    )
                     img.save(str(output_path), "JPEG", quality=self.quality)
             else:
                 img.save(str(output_path), "JPEG", quality=self.quality)
@@ -220,7 +224,7 @@ class NEFConverter:
     def _copy_exif_data(self, source_path: Path, dest_path: Path) -> None:
         """
         Copy EXIF metadata from source to destination.
-        
+
         DEPRECATED: Now handled directly in convert_nef_to_jpg
 
         Args:
@@ -341,7 +345,9 @@ class NEFConverter:
             stats = {
                 "total_time": elapsed_time,
                 "time_per_file": elapsed_time / len(nef_files) if nef_files else 0,
-                "files_per_second": len(nef_files) / elapsed_time if elapsed_time > 0 else 0,
+                "files_per_second": (
+                    len(nef_files) / elapsed_time if elapsed_time > 0 else 0
+                ),
             }
 
             logger.info(

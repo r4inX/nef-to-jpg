@@ -73,9 +73,7 @@ class NEFWatchHandler(FileSystemEventHandler):
             print(f"❌ Error converting {file_path.name}: {e}")
 
 
-def watch_directory(
-    directory: str, converter: NEFConverter, output_dir: Path
-) -> None:
+def watch_directory(directory: str, converter: NEFConverter, output_dir: Path) -> None:
     """
     Watch a directory for new NEF files and convert them automatically.
 
