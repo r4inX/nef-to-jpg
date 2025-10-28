@@ -37,6 +37,7 @@ dependencies = [
     "pillow>=10.0.0",
     "tqdm>=4.64.0",
     "watchdog>=4.0.0",
+    "gooey>=1.0.0",
 ]
 
 [project.optional-dependencies]
@@ -77,7 +78,8 @@ nef-converter = "nef_converter.cli:cli_main"
 nef2jpg = "nef_converter.cli:cli_main"
 
 [project.gui-scripts]
-nef-converter-gui = "nef_converter.main:main"
+nef-converter-gui = "nef_converter.gui:gui_main"
+nef-gui = "nef_converter.gui:gui_main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
