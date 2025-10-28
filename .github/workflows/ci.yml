@@ -3,6 +3,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ main, develop ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ main ]
   release:
@@ -169,3 +171,67 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [test, code-quality]
+    
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+
+    - name: Build package
+      run: python -m build
+
+    - name: Create source archive
+      run: |
+        git archive --format=zip --prefix=nef-to-jpg-${{ steps.get_version.outputs.VERSION }}/ HEAD -o nef-to-jpg-${{ steps.get_version.outputs.VERSION }}.zip
+        git archive --format=tar.gz --prefix=nef-to-jpg-${{ steps.get_version.outputs.VERSION }}/ HEAD -o nef-to-jpg-${{ steps.get_version.outputs.VERSION }}.tar.gz
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/*
+          nef-to-jpg-${{ steps.get_version.outputs.VERSION }}.zip
+          nef-to-jpg-${{ steps.get_version.outputs.VERSION }}.tar.gz
+        body: |
+          ## NEF to JPG Converter v${{ steps.get_version.outputs.VERSION }}
+          
+          ### 📦 Installation
+          
+          ```bash
+          # From PyPI (recommended)
+          pip install nef-to-jpg-converter==${{ steps.get_version.outputs.VERSION }}
+          
+          # From source
+          pip install nef-to-jpg-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          ```
+          
+          ### 📝 Changes
+          
+          See [CHANGELOG.md](https://github.com/r4inX/nef-to-jpg/blob/main/CHANGELOG.md) for details.
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
