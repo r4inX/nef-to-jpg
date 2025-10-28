@@ -12,7 +12,6 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-import imageio
 import rawpy
 from PIL import Image
 from tqdm import tqdm
@@ -131,13 +130,29 @@ class NEFConverter:
             True if conversion successful, False otherwise
         """
         try:
+            # Extract EXIF data before conversion if needed
+            exif_data = None
+            if self.preserve_exif:
+                exif_data = self._extract_exif_data(nef_path)
+
+            # Convert NEF to RGB array
             with rawpy.imread(str(nef_path)) as raw:
                 rgb = raw.postprocess()
-                imageio.imwrite(str(output_path), rgb, quality=self.quality)
 
-            # Preserve EXIF data if requested
-            if self.preserve_exif:
-                self._copy_exif_data(nef_path, output_path)
+            # Convert to PIL Image for better control
+            img = Image.fromarray(rgb)
+
+            # Save with EXIF data if available
+            if exif_data:
+                try:
+                    img.save(str(output_path), "JPEG", quality=self.quality, exif=exif_data)
+                    logger.debug(f"Saved {output_path.name} with EXIF data")
+                except Exception as exif_err:
+                    # If EXIF save fails, save without EXIF
+                    logger.warning(f"Could not save with EXIF for {nef_path.name}: {exif_err}, saving without EXIF")
+                    img.save(str(output_path), "JPEG", quality=self.quality)
+            else:
+                img.save(str(output_path), "JPEG", quality=self.quality)
 
             return True
         except FileNotFoundError:
@@ -175,32 +190,39 @@ class NEFConverter:
                 )
             return False
 
+    def _extract_exif_data(self, source_path: Path) -> Optional[bytes]:
+        """
+        Extract EXIF metadata from source file.
+
+        Args:
+            source_path: Source NEF file
+
+        Returns:
+            EXIF data as bytes or None if not available
+        """
+        try:
+            with Image.open(str(source_path)) as source_img:
+                exif = source_img.getexif()
+                if exif:
+                    # Convert to bytes for saving
+                    return exif.tobytes()
+                return None
+        except Exception as e:
+            logger.warning(f"Could not extract EXIF data from {source_path.name}: {e}")
+            return None
+
     def _copy_exif_data(self, source_path: Path, dest_path: Path) -> None:
         """
         Copy EXIF metadata from source to destination.
+        
+        DEPRECATED: Now handled directly in convert_nef_to_jpg
 
         Args:
             source_path: Source NEF file
             dest_path: Destination JPEG file
         """
-        try:
-            # Open both images
-            with Image.open(str(source_path)) as source_img:
-                with Image.open(str(dest_path)) as dest_img:
-                    # Get EXIF data from source
-                    exif = source_img.getexif()
-
-                    if exif:
-                        # Save destination with EXIF data
-                        dest_img.save(
-                            str(dest_path),
-                            "JPEG",
-                            quality=self.quality,
-                            exif=exif,
-                        )
-                        logger.debug(f"Copied EXIF data to {dest_path.name}")
-        except Exception as e:
-            logger.warning(f"Could not copy EXIF data from {source_path.name}: {e}")
+        # This method is kept for backward compatibility but is no longer used
+        pass
 
     @staticmethod
     def _convert_single_file(args: Tuple[Path, Path, int, bool]) -> Tuple[bool, Path]:
@@ -215,27 +237,33 @@ class NEFConverter:
         """
         nef_path, output_path, quality, preserve_exif = args
         try:
-            with rawpy.imread(str(nef_path)) as raw:
-                rgb = raw.postprocess()
-                imageio.imwrite(str(output_path), rgb, quality=quality)
-
-            # Preserve EXIF data if requested
+            # Extract EXIF data before conversion if needed
+            exif_data = None
             if preserve_exif:
                 try:
                     with Image.open(str(nef_path)) as source_img:
-                        with Image.open(str(output_path)) as dest_img:
-                            exif = source_img.getexif()
-                            if exif:
-                                dest_img.save(
-                                    str(output_path),
-                                    "JPEG",
-                                    quality=quality,
-                                    exif=exif,
-                                )
+                        exif = source_img.getexif()
+                        if exif:
+                            exif_data = exif.tobytes()
                 except Exception as e:
-                    logger.warning(
-                        f"Could not copy EXIF data from {nef_path.name}: {e}"
-                    )
+                    logger.warning(f"Could not extract EXIF from {nef_path.name}: {e}")
+
+            # Convert NEF to RGB array
+            with rawpy.imread(str(nef_path)) as raw:
+                rgb = raw.postprocess()
+
+            # Convert to PIL Image and save
+            img = Image.fromarray(rgb)
+
+            # Save with EXIF data if available
+            if exif_data:
+                try:
+                    img.save(str(output_path), "JPEG", quality=quality, exif=exif_data)
+                except Exception:
+                    # If EXIF save fails, save without EXIF
+                    img.save(str(output_path), "JPEG", quality=quality)
+            else:
+                img.save(str(output_path), "JPEG", quality=quality)
 
             return True, nef_path
         except Exception as e:
