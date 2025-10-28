@@ -263,12 +263,63 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📊 Project Status
 
 - ✅ **Core Features**: Complete
+- ✅ **GUI Mode**: Complete (v2.1.0)
 - ✅ **CLI Interface**: Complete  
+- ✅ **Parallel Processing**: Complete (v2.1.0)
+- ✅ **EXIF Preservation**: Complete (v2.1.0)
+- ✅ **Watch Mode**: Complete (v2.1.0)
 - ✅ **Modern Architecture**: Complete
 - ✅ **Type Safety**: Complete
-- 🚧 **Web Interface**: Planned for V3.0
-- 🚧 **Docker Support**: Planned for V3.0
-- 🚧 **Batch Processing API**: Planned for V3.0
+
+## 🗺️ Roadmap
+
+See our detailed [ROADMAP.md](ROADMAP.md) for planned features and improvements!
+
+### 🚀 Upcoming Features
+
+#### v2.2.0 - Enhanced User Experience (Q1 2026)
+- 🎨 **GUI Improvements**: Drag & drop files, preview images, dark mode, conversion history
+- � **CLI Enhancements**: Recursive mode, file filtering, dry run, JSON output
+- 📊 **Statistics & Reporting**: HTML/PDF reports, file size comparison, CSV export
+
+#### v2.3.0 - Professional Features (Q2 2026)
+- 📸 **Advanced Processing**: Auto-rotate, white balance, sharpening, watermarking
+- 🖼️ **Format Support**: PNG, TIFF, WebP, HEIC + Canon/Sony RAW formats
+- 🎨 **Color Management**: ICC profiles, color space conversion, 16-bit output
+
+#### v2.4.0 - Web & Integration (Q3 2026)
+- 🌍 **Web Interface**: Browser-based UI with REST API
+- 🔌 **Cloud Integration**: Dropbox, Google Drive, OneDrive support
+- 📦 **Automation**: Hot folders, scheduling, webhook notifications
+
+#### v2.5.0 - DevOps & Deployment (Q4 2026)
+- � **Containerization**: Docker, Kubernetes, serverless functions
+- 📊 **Monitoring**: Prometheus metrics, Grafana dashboards
+
+#### v3.0.0 - Enterprise & Advanced (2027)
+- 🏢 **Enterprise**: Multi-user, licensing, audit logging, distributed processing
+- 🤖 **AI Features**: Scene detection, auto-tagging, face detection, smart cropping
+- 📱 **Native Apps**: Windows Store, Mac App Store, iOS, Android
+
+### � Top Community Requests
+
+Want to help shape the future? Vote on features or suggest new ones in our [Discussions](https://github.com/r4inX/nef-to-jpg/discussions)!
+
+**Quick Wins** (Easy to implement):
+- System tray icon with quick actions
+- Context menu integration (right-click in Explorer)
+- Sound notification on completion
+- Remember last used settings
+- Color-coded CLI output
+
+**Most Requested**:
+- Batch rename files during conversion
+- Preserve folder structure in output
+- Multiple output formats simultaneously
+- GPU acceleration for faster processing
+- Before/After comparison slider
+
+See [ROADMAP.md](ROADMAP.md) for the complete list of 100+ planned features!
 
 ---
 
