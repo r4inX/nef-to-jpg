@@ -1,24 +1,57 @@
-# Print iterations progress
-def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+"""
+Legacy Progress Bar Module
+
+This module is kept for backward compatibility.
+New code should use tqdm instead of this module.
+
+Deprecated: Use tqdm for modern progress bar functionality.
+"""
+
+import warnings
+from typing import Union
+
+
+def printProgressBar(
+    iteration: int,
+    total: int,
+    prefix: str = '',
+    suffix: str = '',
+    decimals: int = 1,
+    length: int = 100,
+    fill: str = '█',
+    printEnd: str = "\r"
+) -> None:
     """
-    Call in a loop to create terminal progress bar<br>
-    @params:<br>
-        iteration   - Required  : current iteration (Int)<br>
-        total       - Required  : total iterations (Int)<br>
-        prefix      - Optional  : prefix string (Str)<br>
-        suffix      - Optional  : suffix string (Str)<br>
-        decimals    - Optional  : positive number of decimals in percent complete (Int)<br>
-        length      - Optional  : character length of bar (Int)<br>
-        fill        - Optional  : bar fill character (Str)<br>
-        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    Call in a loop to create terminal progress bar.
+    
+    DEPRECATED: Use tqdm instead for better functionality.
+    
+    Args:
+        iteration: Current iteration (Int)
+        total: Total iterations (Int)
+        prefix: Prefix string (Str)
+        suffix: Suffix string (Str)
+        decimals: Positive number of decimals in percent complete (Int)
+        length: Character length of bar (Int)
+        fill: Bar fill character (Str)
+        printEnd: End character (e.g. "\\r", "\\r\\n") (Str)
     """
-    percent         = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength    = int(length * iteration // total)
+    warnings.warn(
+        "pgbar.printProgressBar is deprecated. Use tqdm instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
+    
+    if total == 0:
+        return
+        
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
 
     bar = fill * filledLength + '-' * (length - filledLength)
 
-    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
     
     # Print New Line on Complete
-    if iteration == total: 
+    if iteration == total:
         print()
