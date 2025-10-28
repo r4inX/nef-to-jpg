@@ -29,9 +29,7 @@ def select_directory() -> Optional[str]:
     root = Tk()
     root.withdraw()  # Hide the main window
 
-    directory = askdirectory(
-        title="Select your Folder with .NEF Files to convert them"
-    )
+    directory = askdirectory(title="Select your Folder with .NEF Files to convert them")
 
     root.destroy()
     return directory if directory else None
@@ -66,9 +64,7 @@ def main() -> None:
         if successful == 0:
             print("❌ No files were converted. Please check the logs.")
         elif successful < total:
-            print(
-                "⚠️ Some files failed to convert. Check the logs for details."
-            )
+            print("⚠️ Some files failed to convert. Check the logs for details.")
         else:
             print("🎉 All files converted successfully!")
 

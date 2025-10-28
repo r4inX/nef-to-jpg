@@ -22,9 +22,7 @@ logger = logging.getLogger(__name__)
 if sys.platform == "win32":
     import os
 
-    FILEBROWSER_PATH = os.path.join(
-        os.getenv("WINDIR", "C:\\Windows"), "explorer.exe"
-    )
+    FILEBROWSER_PATH = os.path.join(os.getenv("WINDIR", "C:\\Windows"), "explorer.exe")
 elif sys.platform == "darwin":
     FILEBROWSER_PATH = "open"
 else:
@@ -132,9 +130,7 @@ class NEFConverter:
             successful = 0
 
             # Convert files with progress bar
-            for nef_file in tqdm(
-                nef_files, desc="Converting NEF files", unit="file"
-            ):
+            for nef_file in tqdm(nef_files, desc="Converting NEF files", unit="file"):
                 output_file = output_dir / f"{nef_file.stem}.jpg"
 
                 if self.convert_nef_to_jpg(nef_file, output_file):
@@ -160,13 +156,9 @@ class NEFConverter:
         try:
             if sys.platform == "win32":
                 # nosec: B603 - subprocess is safe here with hardcoded paths
-                subprocess.run(
-                    [FILEBROWSER_PATH, str(directory)], check=False
-                )
+                subprocess.run([FILEBROWSER_PATH, str(directory)], check=False)
             else:
                 # nosec: B603 - subprocess is safe here with hardcoded paths
-                subprocess.run(
-                    [FILEBROWSER_PATH, str(directory)], check=False
-                )
+                subprocess.run([FILEBROWSER_PATH, str(directory)], check=False)
         except Exception as e:
             logger.warning(f"Could not open directory {directory}: {e}")

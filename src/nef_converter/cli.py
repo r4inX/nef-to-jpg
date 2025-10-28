@@ -63,9 +63,7 @@ Examples:
         help="Enable verbose logging",
     )
 
-    parser.add_argument(
-        "--version", action="version", version="%(prog)s 2.0.0"
-    )
+    parser.add_argument("--version", action="version", version="%(prog)s 2.0.0")
 
     return parser
 
@@ -136,9 +134,7 @@ def cli_main() -> None:
             print("❌ No files were converted. Please check the logs.")
             sys.exit(1)
         elif successful < total:
-            print(
-                "⚠️ Some files failed to convert. Check the logs for details."
-            )
+            print("⚠️ Some files failed to convert. Check the logs for details.")
             sys.exit(1)
         else:
             print("🎉 All files converted successfully!")
