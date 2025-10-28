@@ -1,0 +1,51 @@
+theme: minima
+title: "NEF to JPG Converter"
+description: "A modern Python tool for converting Nikon NEF raw files to JPEG format"
+url: "https://r4inx.github.io"
+baseurl: "/nef-to-jpg"
+
+author:
+  name: "r4inX"
+  url: "https://github.com/r4inX"
+
+repository: "r4inX/nef-to-jpg"
+
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - .venv/
+  - __pycache__/
+  - *.pyc
+  - .pytest_cache/
+  - .coverage
+  - .mypy_cache/
+  - build/
+  - dist/
+  - *.egg-info/
+
+header_pages:
+  - index.md
+
+show_excerpts: true
+
+google_analytics: # Add your Google Analytics ID if you have one
+
+social_links:
+  github: r4inX
