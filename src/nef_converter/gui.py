@@ -2,6 +2,7 @@
 NEF Converter - Graphical User Interface
 
 User-friendly GUI for NEF to JPEG conversion using Gooey.
+Note: Requires 'gooey' package. Install with: pip install nef-to-jpg-converter[gui]
 """
 
 import argparse
@@ -9,7 +10,18 @@ import logging
 import sys
 from pathlib import Path
 
-from gooey import Gooey, GooeyParser
+# Check if Gooey is available
+try:
+    from gooey import Gooey, GooeyParser
+    GOOEY_AVAILABLE = True
+except ImportError:
+    GOOEY_AVAILABLE = False
+    # Create dummy decorators for when Gooey is not installed
+    def Gooey(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+    GooeyParser = argparse.ArgumentParser
 
 # Handle both direct execution and package import
 try:
@@ -23,7 +35,7 @@ logger = logging.getLogger(__name__)
 @Gooey(
     program_name="NEF to JPEG Converter",
     program_description="Convert Nikon NEF raw files to high-quality JPEG images",
-    default_size=(800, 700),
+    default_size=(800, 900),
     required_cols=1,
     optional_cols=1,
     navigation="SIDEBAR",
@@ -240,6 +252,19 @@ def create_gui() -> None:
 
 def gui_main() -> None:
     """GUI entry point."""
+    if not GOOEY_AVAILABLE:
+        print("❌ Error: Gooey is not installed!")
+        print()
+        print("The GUI requires the 'gooey' package.")
+        print("Install it with:")
+        print()
+        print("  pip install nef-to-jpg-converter[gui]")
+        print()
+        print("Or install gooey directly:")
+        print("  pip install gooey")
+        print()
+        sys.exit(1)
+    
     create_gui()
 
 

@@ -31,17 +31,33 @@ A modern Python tool for converting Nikon NEF raw files to JPEG format with batc
 ### Installation
 
 ```bash
-# Install from source
+# Basic installation (CLI only)
+pip install git+https://github.com/r4inX/nef-to-jpg.git
+
+# With GUI support (recommended for desktop use)
+pip install "git+https://github.com/r4inX/nef-to-jpg.git#egg=nef-to-jpg-converter[gui]"
+
+# For development
 git clone https://github.com/r4inX/nef-to-jpg.git
 cd nef-to-jpg
-pip install -e .
+pip install -e ".[gui,dev]"
 ```
 
 ### Usage
 
-#### GUI Mode (Default)
+#### GUI Mode (requires [gui] extra)
 ```bash
-nef-converter
+# Launch graphical interface
+nef-gui
+
+# Or
+python -m nef_converter.gui
+```
+
+#### Command Line Mode
+```bash
+# Convert files in a directory
+nef-converter -d /path/to/nef/files
 ```
 
 #### Command Line Mode
